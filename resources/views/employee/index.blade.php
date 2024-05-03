@@ -59,7 +59,6 @@
                 </thead>
                 <tbody>
                     @forelse ($users as $user)
-                        @if (!($user->is_admin))
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{$user->name}}
@@ -78,12 +77,11 @@
                                 </td>
                                 @if (Auth::user()->is_admin)
                                     <td class="px-6 py-4 text-center">
-                                        <a href="{{ route('employee.profile', $user->id) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> |
+                                        <a href="{{ route('employee.update.show', $user->id) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> |
                                         <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
                                     </td>
                                 @endif
                             </tr>
-                        @endif
                     @empty
                         <tr>
                             <th colspan="5">No data</th>
@@ -104,7 +102,7 @@
         button.addEventListener('click', function() {
             const column = this.dataset.column;
             const direction = this.dataset.direction;
-            const url = `{{ route('sort') }}?column=${column}&direction=${direction}`;
+            const url = `{{ route('sort') }}?page=&column=${column}&direction=${direction}`;
             this.style.display = 'none';
             window.location.href = url;
         })

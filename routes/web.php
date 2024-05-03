@@ -33,8 +33,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->prefix('employee')->group(function() {
     Route::get('/', [UserController::class, 'index'])->name('employee');
 
-    Route::get('/profile/{id}', [UserController::class, 'getUserById'])->name('employee.profile')->middleware('user.valid');
-    Route::post('/profile/{id}', [UserController::class, 'update'])->name('employee.profile.update');
+    Route::get('/update/{id}', [UserController::class, 'getUserById'])->name('employee.update.show')->middleware('user.valid');
+    Route::post('/update/{id}', [UserController::class, 'update'])->name('employee.update.store');
 
     // Route::get('/sort/{column}/{direction}', [UserController::class, 'sort'])->name('sort');
     Route::get('/sort', [UserController::class, 'sort'])->name('sort')->middleware('sort.valid');
