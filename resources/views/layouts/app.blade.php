@@ -31,7 +31,7 @@
 
             <!-- Page Content -->
             <main style="padding-bottom: 100px">
-                <div class="max-w-7xl mx-auto my-5 ">
+                <div class="max-w-7xl mx-auto">
                     @if (session('error'))
                         <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-200 dark:bg-gray-800 dark:text-red-400" role="alert">
                             <span class="font-medium">{{session('error')}}</span>

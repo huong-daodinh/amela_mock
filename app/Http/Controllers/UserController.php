@@ -7,19 +7,19 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Models\Department;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 
+
 class UserController extends Controller
 {
     public function index() {
         if (Gate::allows('admin')) {
-            $users = User::query()->paginate(5);
+            $users = User::query()->paginate(15);
         } else {
-            $users = User::query()->where('is_admin', 0)->paginate(5);
+            $users = User::query()->where('is_admin', 0)->paginate(15);
         }
         return view('employee.index', compact('users'));
     }
@@ -27,8 +27,8 @@ class UserController extends Controller
     public function sort(Request $request) {
         $column = $request->query('column');
         $direction = $request->query('direction');
-        $users = User::query()->orderBy($column, $direction)->paginate(5);
-        // $users->withPath('sort/column=name&direction=asc');
+        $users = User::query()->orderBy($column, $direction)->paginate(15);
+        $users->appends(['column' => $column, 'direction' => $direction]);
         return view('employee.index', compact('users'));
     }
 

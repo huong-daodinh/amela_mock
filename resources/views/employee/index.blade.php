@@ -78,7 +78,7 @@
                                 @if (Auth::user()->is_admin)
                                     <td class="px-6 py-4 text-center">
                                         <a href="{{ route('employee.update.show', $user->id) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> |
-                                        <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
+                                        <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
                                     </td>
                                 @endif
                             </tr>
@@ -102,7 +102,7 @@
         button.addEventListener('click', function() {
             const column = this.dataset.column;
             const direction = this.dataset.direction;
-            const url = `{{ route('sort') }}?page=&column=${column}&direction=${direction}`;
+            const url = `{{ route('sort') }}?&column=${column}&direction=${direction}`;
             this.style.display = 'none';
             window.location.href = url;
         })
