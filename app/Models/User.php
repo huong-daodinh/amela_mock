@@ -4,11 +4,12 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -22,6 +23,12 @@ class User extends Authenticatable
         'email',
         'password',
         'date_of_birth',
+        'phone',
+        'is_admin',
+        'address',
+        'status',
+        'avatar',
+        'department_id'
     ];
 
     /**
@@ -46,5 +53,13 @@ class User extends Authenticatable
 
     public function department() {
         return $this->belongsTo(Department::class);
+    }
+
+    public function scopeSearch($query, $search='') {
+        return $query->where('name', 'LIKE', '%'.$search.'%')->orWhere('email', 'LIKE', '%'.$search.'%');
+    }
+
+    public function timesheets() {
+        return $this->hasMany(TimeSheet::class);
     }
 }

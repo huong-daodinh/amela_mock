@@ -7,8 +7,16 @@
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
 
     <div class="relative overflow-x-auto">
-
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg ">
+            <div class="flex justify-end bg-slate-50 pt-4 pr-4 pb-4 align-center bg-gray-200">
+                @if (Auth::user()->is_admin)
+                    <a href="{{ route('employee.create.show') }}" class="block py-2.5 px-5 me-2  text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Create new employee</a>
+                @endif
+                <form action="" method="POST">
+                    @csrf
+                    <input class="block text-sm text-gray-900 border border-gray-300 rounded bg-gray-50 focus:ring-blue-500 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="search" id="" placeholder="Search....">
+                </form>
+            </div>
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -61,24 +69,35 @@
                     @forelse ($users as $user)
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{$user->name}}
+                                    <a href="{{route('employee.profile', ['id' => $user->id])}}" class="font-bold text-purple-600 dark:text-blue-500 hover:underline">
+                                        {{$user->name}}
+                                    </a>
                                 </th>
                                 <td class="px-6 py-4">
                                     {{$user->email}}
                                 </td>
                                 <td class="px-6 py-4">
-                                    @php
-                                        $date = explode('-', $user->date_of_birth);
-                                        echo date('Y') - $date[0];
-                                    @endphp
+                                    @if ($user->date_of_birth)
+                                        {{ date('Y') - explode('-', $user->date_of_birth)[0] }}
+                                    @else
+                                        {{ 'NaN' }}
+                                    @endif
                                 </td>
+                                @if ($user->department)
                                 <td class="px-6 py-4">
                                     {{$user->department->name}}
                                 </td>
+                                    @else
+                                <td class="px-6 py-4 font-bold text-emerald-400">
+                                    Not attached yet
+                                </td>
+                                    @endif
                                 @if (Auth::user()->is_admin)
                                     <td class="px-6 py-4 text-center">
-                                        <a href="{{ route('employee.update.show', $user->id) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> |
-                                        <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
+                                        <a href="{{ route('employee.update.show', $user->id) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                        @if (Auth::user()->id != $user->id)
+                                            | <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
+                                        @endif
                                     </td>
                                 @endif
                             </tr>
@@ -102,7 +121,7 @@
         button.addEventListener('click', function() {
             const column = this.dataset.column;
             const direction = this.dataset.direction;
-            const url = `{{ route('sort') }}?&column=${column}&direction=${direction}`;
+            const url = `{{ route('employee.search') }}?column=${column}&direction=${direction}`;
             this.style.display = 'none';
             window.location.href = url;
         })

@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('employee')" :active="request()->is('employee/*', 'employee')">
                         {{ Auth::user()->is_admin ? 'Employees' : 'Co-Workers' }}
                     </x-nav-link>
+                    <x-nav-link :href="route('timesheet.index')" :active="request()->is('timesheet/*', 'timesheet')">
+                        {{ 'Timesheets' }}
+                    </x-nav-link>
                 </div>
             </div>
 

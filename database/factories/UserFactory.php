@@ -23,12 +23,18 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $department_id = $this->faker->numberBetween(1,4);
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'department_id' => $department_id,
+            'password' => static::$password ??= Hash::make('password123'),
+            'date_of_birth' => $this->faker->date(),
+            'is_admin' => 0,
+            'gender' => $this->faker->numberBetween(0,1),
+            'address' => $this->faker->streetAddress(),
+            'phone' => $this->faker->numerify('####-###-###'),
+            'status' => 0,
         ];
     }
 

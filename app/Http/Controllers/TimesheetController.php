@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Timesheet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class TimesheetController extends Controller
 {
@@ -11,7 +15,14 @@ class TimesheetController extends Controller
      */
     public function index()
     {
-        //
+        if (Gate::allows('admin')) {
+            return view('timesheet.index');
+        }
+        // must be timesheet of today
+        $timesheet = Auth::user()->timesheets;
+        $timesheet = $timesheet->where('created_at', '=', Carbon::now()->format('Y-m-d'));
+        dd($timesheet);
+        return view('timesheet.employee.create', compact('timesheet'));
     }
 
     /**
@@ -27,9 +38,24 @@ class TimesheetController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->input('time_in');
-        // dd($data);
-        
+        $startShift = Carbon::createFromTimeString('08:10');
+        $endShift = Carbon::createFromTimeString('17:30');
+
+        $timesheet = new Timesheet();
+        if ($request->has('check_in')) {
+            $date = Carbon::now()->format('Y-m-d');
+            if (Carbon::now()->between($startShift, $endShift)) {
+                $time = Carbon::now()->format('H:i:s');
+                if (Carbon::now()->lte($startShift)) {
+                    $check_in_status = 'On Time';
+                } else {
+                    $check_in_status = 'Late';
+                }
+                dd($time);
+            }
+        } else if ($request->has('check_out')) {
+
+        }
     }
 
     /**
