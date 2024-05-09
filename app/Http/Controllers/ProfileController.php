@@ -69,7 +69,9 @@ class ProfileController extends Controller
         Auth::logout();
 
         $user->delete();
-
+        if (fileExists(public_path('storage/avatars/' . $user->avatar))) {
+            File::delete(public_path('storage/avatars/' . $user->avatar));
+        }
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

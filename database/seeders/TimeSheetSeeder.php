@@ -4,15 +4,15 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Department;
+use App\Models\Timesheet;
 
-class DepartmentSeeder extends Seeder
+class TimeSheetSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Department::factory()->count(4)->create();
+        // Timesheet::factory()->count
     }
 }

@@ -16,11 +16,23 @@ class TimeSheetFactory extends Factory
      */
     public function definition(): array
     {
-        $timeRand = rand(28800, 32400);
-        $status = $timeRand > 29400 ? 'Late' : 'On Time';
-        return [
-            'check_in' => date('H:i:s', $timeRand),
+        $startTimeIn = strtotime('08:00:00');
+        $endTimeIn = strtotime('09:00:00');
+        $lateTime = strtotime('08:10:00');
 
+        $overTime = strtotime('17:30:00');
+        $endTimeOut = strtotime('18:30:00');
+
+        $timeRandIn = mt_rand($startTimeIn, $endTimeIn);
+        $timeRandOut = mt_rand($timeRandIn, $endTimeOut);
+        $statusIn = $timeRandIn > $lateTime ? 'Late' : 'On Time';
+        $statusOut = $timeRandOut < $overTime ? 'Left early' : 'OverTime';
+        return [
+            'check_in' => date('H:i:s', $timeRandIn),
+            'check_out' => date('H:i:s', $timeRandOut),
+            'date' => $this->faker->date('Y-m-d', $max = 'now'),
+            'check_in_status' => $statusIn,
+            'check_out_status' => $statusOut,
         ];
     }
 }

@@ -16,13 +16,12 @@ class TimesheetController extends Controller
     public function index()
     {
         if (Gate::allows('admin')) {
-            return view('timesheet.index');
+            $timesheets = Timesheet::query()->paginate(15);
+            return view('timesheet.index', compact('timesheets'));
         }
-        // must be timesheet of today
-        $timesheet = Auth::user()->timesheets;
-        $timesheet = $timesheet->where('created_at', '=', Carbon::now()->format('Y-m-d'));
-        dd($timesheet);
-        return view('timesheet.employee.create', compact('timesheet'));
+        $timesheets = Timesheet::query()->where('user_id', '=', Auth::user()->id)->paginate(15);
+        // dd($timesheets);
+        return view('timesheet.employee.index', compact('timesheets'));
     }
 
     /**
@@ -30,7 +29,14 @@ class TimesheetController extends Controller
      */
     public function create()
     {
-        return view('timesheet.create');
+        if (Gate::allows('admin')) {
+            return view('timesheet.create');
+        }
+        $timesheet = Timesheet::query()
+        ->where('date', '=', Carbon::now()->format('Y-m-d'))
+        ->where('user_id', '=', Auth::user()->id)->get();
+        $timesheet = $timesheet->first();
+        return view('timesheet.employee.create', compact('timesheet'));
     }
 
     /**
@@ -40,21 +46,50 @@ class TimesheetController extends Controller
     {
         $startShift = Carbon::createFromTimeString('08:10');
         $endShift = Carbon::createFromTimeString('17:30');
-
-        $timesheet = new Timesheet();
+        $limit = Carbon::createFromTimeString('19:00');
         if ($request->has('check_in')) {
-            $date = Carbon::now()->format('Y-m-d');
-            if (Carbon::now()->between($startShift, $endShift)) {
-                $time = Carbon::now()->format('H:i:s');
+            // dd($request->input('check_in'));
+            $timeCheckin = Carbon::createFromTimeString($request->input('check_in'));
+            if ($timeCheckin->between($startShift, $endShift)) {
+                $time = $request->input('check_in');
+                $date = Carbon::now()->format('Y-m-d');
                 if (Carbon::now()->lte($startShift)) {
                     $check_in_status = 'On Time';
+                    dd($check_in_status);
                 } else {
                     $check_in_status = 'Late';
+                    // dd($check_in_status);
                 }
-                dd($time);
+                // dd($time, $date, $check_in_status);
+                Timesheet::create([
+                    'user_id' => Auth::user()->id,
+                    'check_in' => $time,
+                    'check_in_status' => $check_in_status,
+                    'date' => $date,
+                ]);
+                return redirect()->route('timesheet.index')->with('success', 'Checked in successfully');
+            } else {
+
             }
         } else if ($request->has('check_out')) {
-
+            $time = $request->input('check_out');
+            $timeCheckout = Carbon::createFromTimeString($request->input('check_out'));
+            $search = [
+                ['user_id', '=', Auth::user()->id],
+                ['date', '=', Carbon::now()->format('Y-m-d')]
+            ];
+            $todayTimeSheet = Timesheet::query()->where($search)->first();
+            if ($timeCheckout->lte($endShift)) {
+                $check_out_status = 'Left Early';
+            } else if ($timeCheckout->gt($endShift) && $timeCheckout->lte($limit)) {
+                $check_out_status = 'Over Time';
+            } else {
+                $check_out_status = 'Forgot to checkout';
+            }
+            $todayTimeSheet->check_out_status = $check_out_status;
+            $todayTimeSheet->check_out = $time;
+            $todayTimeSheet->save();
+            return redirect()->route('timesheet.index')->with('success', 'Checked out successfully');
         }
     }
 
@@ -63,7 +98,9 @@ class TimesheetController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // $timesheet = Timesheet::find($id);
+        // return view()
+        return 'timesheet show ' . $id;
     }
 
     /**

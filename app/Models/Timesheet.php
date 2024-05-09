@@ -9,7 +9,7 @@ use App\Models\User;
 class Timesheet extends Model
 {
     use HasFactory;
-    protected $fillable = ['check_in', 'check_out', 'date', 'check_in_status', 'check_out_status'];
+    protected $fillable = ['check_in', 'check_out', 'date', 'check_in_status', 'check_out_status', 'user_id'];
 
     public function user() {
         return $this->belongsTo(User::class);

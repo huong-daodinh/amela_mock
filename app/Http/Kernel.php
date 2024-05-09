@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'user.valid' => \App\Http\Middleware\UserValid::class,
         'sort.valid' => \App\Http\Middleware\SortValid::class,
+        'timesheet.valid' => \App\Http\Middleware\TimesheetValid::class,
     ];
 }

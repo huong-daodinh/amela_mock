@@ -24,6 +24,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $department_id = $this->faker->numberBetween(1,4);
+        $phone = $this->faker->numerify('#########');
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
@@ -33,7 +34,7 @@ class UserFactory extends Factory
             'is_admin' => 0,
             'gender' => $this->faker->numberBetween(0,1),
             'address' => $this->faker->streetAddress(),
-            'phone' => $this->faker->numerify('####-###-###'),
+            'phone' => str_pad($phone, 10, '0', STR_PAD_LEFT),
             'status' => 0,
         ];
     }

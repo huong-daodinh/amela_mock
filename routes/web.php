@@ -50,6 +50,6 @@ Route::middleware('auth', 'verified')->prefix('employee')->group(function() {
 });
 // Route::resource('/user', UserController::class);
 
-Route::middleware('auth', 'verified')->resource('/timesheet', TimesheetController::class);
+Route::middleware('auth', 'verified', 'timesheet.valid')->resource('/timesheet', TimesheetController::class);
 
 require __DIR__.'/auth.php';
