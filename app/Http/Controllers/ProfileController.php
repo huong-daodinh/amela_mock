@@ -69,6 +69,7 @@ class ProfileController extends Controller
         Auth::logout();
 
         $user->delete();
+        // delete img
         if (fileExists(public_path('storage/avatars/' . $user->avatar))) {
             File::delete(public_path('storage/avatars/' . $user->avatar));
         }

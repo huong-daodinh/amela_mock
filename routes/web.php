@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TimesheetController;
+use App\Http\Controllers\GrantPermissionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +51,27 @@ Route::middleware('auth', 'verified')->prefix('employee')->group(function() {
 });
 // Route::resource('/user', UserController::class);
 
-Route::middleware('auth', 'verified', 'timesheet.valid')->resource('/timesheet', TimesheetController::class);
+// Route::middleware('auth', 'verified', 'timesheet.valid')->resource('/timesheet', TimesheetController::class);
+// Route::post('/timesheet/{id}', [TimesheetController::class, 'update'])->middleware('auth', 'verified', 'timesheet.valid')->name('timesheet.save');
+
+Route::middleware('auth', 'verified', 'timesheet.valid')->prefix('/timesheet')->name('timesheet.')->group(function() {
+    Route::get('/', [TimesheetController::class, 'index'])->name('index');
+
+    Route::get('/create', [TimesheetController::class, 'create'])->name('create');
+    Route::post('/create', [TimesheetController::class, 'store'])->name('store');
+
+    Route::get('/{id}', [TimesheetController::class, 'edit'])->name('edit');
+    Route::post('/{id}', [TimesheetController::class, 'update'])->name('save');
+
+    Route::get('/delete/{id}', [TimesheetController::class, 'destroy'])->name('destroy');
+});
+
+Route::middleware('auth', 'admin.check')->name('permission.')->prefix('permission')->group(function() {
+    Route::get('/', [GrantPermissionController::class, 'index'])->name('index');
+    Route::post('/', [GrantPermissionController::class, 'index'])->name('search');
+
+    Route::get('/grant/{id}', [GrantPermissionController::class, 'show'])->name('grant.show')->middleware('user.valid');
+    Route::post('/grant/{id}', [GrantPermissionController::class, 'grant'])->name('grant.create');
+});
 
 require __DIR__.'/auth.php';

@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'user.valid' => \App\Http\Middleware\UserValid::class,
         'sort.valid' => \App\Http\Middleware\SortValid::class,
         'timesheet.valid' => \App\Http\Middleware\TimesheetValid::class,
+        'admin.check' => \App\Http\Middleware\AdminCheck::class,
     ];
 }

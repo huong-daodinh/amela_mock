@@ -31,17 +31,8 @@ class UserController extends Controller
             $query->orderBy($column, $direction);
         }
         $users = $query->paginate(15)->appends(['search' => $search])->appends($request->query());
-        // dd($users);
         return view('employee.index', compact('users'));
     }
-
-    // public function sort(Request $request) {
-    //     $column = $request->query('column');
-    //     $direction = $request->query('direction');
-    //     $users = User::query()->orderBy($column, $direction)->paginate(15);
-    //     $users->appends(['column' => $column, 'direction' => $direction]);
-    //     return view('employee.index', compact('users'));
-    // }
 
     public function getUserById($id) {
         if (Gate::allows('update-user')) {

@@ -21,6 +21,11 @@
                     <x-nav-link :href="route('timesheet.index')" :active="request()->is('timesheet/*', 'timesheet')">
                         {{ 'Timesheets' }}
                     </x-nav-link>
+                    @if (Auth::user()->is_admin)
+                        <x-nav-link :href="route('permission.index')" :active="request()->is('permission/*', 'permission')">
+                            {{ 'Permission' }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 

@@ -5,9 +5,9 @@
             {{ 'Timesheets / Histories' }}
         </h2>
     </x-slot>
-    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 bg-white ">
 
-        <div class="d-flex justify-between bg-white pt-4 pb-1">
+        <div class="d-flex justify-between pt-4 pb-1">
             <div class="flex justify-end px-5">
                 <a class="mx-4 py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" href="{{route('timesheet.create')}}">Checkin / Checkout</a>
                 <form action="">

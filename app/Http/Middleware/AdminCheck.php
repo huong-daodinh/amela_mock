@@ -4,10 +4,11 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use App\Models\Timesheet;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
-class TimesheetValid
+
+class AdminCheck
 {
     /**
      * Handle an incoming request.
@@ -16,12 +17,9 @@ class TimesheetValid
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->route('timesheet')) {
-            if (Timesheet::find($request->route('timesheet'))) {
-                return $next($request);
-            }
-            return redirect()->back()->with('error', 'Invalid id');
+        if (Auth::user()->is_admin) {
+            return $next($request);
         }
-        return $next($request);
+        return redirect()->back()->with('error', 'You are not admin! Can not perform this action');
     }
 }

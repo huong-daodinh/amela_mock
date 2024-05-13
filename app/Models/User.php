@@ -8,6 +8,8 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\UserPermission;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -61,5 +63,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function timesheets() {
         return $this->hasMany(TimeSheet::class);
+    }
+
+    public function permissions() {
+        return $this->belongsToMany(Permission::class, 'user_permission');
     }
 }
