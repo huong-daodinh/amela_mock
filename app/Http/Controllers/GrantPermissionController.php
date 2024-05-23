@@ -58,17 +58,17 @@ class GrantPermissionController extends Controller
             //* thêm quyền mới
             foreach($permissions as $permission) {
                 if (!in_array($permission, $userPermissions)) {
-                    // echo 'Quyền mới ' . $permission . ', id: ' . $dataMap[$permission] . '</br>';
                     UserPermission::create([
                         'user_id' => $user->id,
                         'permission_id' => $dataMap[$permission],
                     ]);
                 }
             }
+        }
+        if (!empty($userPermissions)) {
             // * xoá quyền cũ đã có
             foreach($userPermissions as $userPermission) {
                 if (!in_array($userPermission, $permissions)) {
-                    // echo 'Quyền cũ ' . $userPermission . ', id: ' . $dataMap[$userPermission] . '</br>';
                     $record = UserPermission::where([
                         ['user_id', '=', $user->id],
                         ['permission_id', '=', $dataMap[$userPermission]],

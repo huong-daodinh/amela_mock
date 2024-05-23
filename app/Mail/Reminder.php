@@ -18,7 +18,7 @@ class Reminder extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        protected User $user
+        protected $name
     )
     {
         //
@@ -40,9 +40,9 @@ class Reminder extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.check_in_reminder',
             with: [
-                'username' => $this->user->name,
+                'username' => $this->name,
             ]
         );
     }

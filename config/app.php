@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use App\helpers\Helper;
 
 return [
 
@@ -186,4 +187,5 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    // 'MyHelper' => App\helpers\Helper::class,
 ];

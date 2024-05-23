@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\CreateUserRequest;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 
 use function PHPUnit\Framework\fileExists;
 
@@ -58,7 +60,25 @@ class UserController extends Controller
 
     public function store(CreateUserRequest $request) {
         $validated_data = $request->validated();
-        dd($validated_data);
+        // dd($validated_data);
+        if (isset($validated_data['avatar'])) {
+            $file = $validated_data['avatar'];
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $path = $request->file('avatar')->storeAs('avatars', $fileName, 'public');
+        }
+        $user = User::create([
+            'email' => $validated_data['email'],
+            'name' => $validated_data['name'],
+            'password' => Hash::make($validated_data['password']),
+            'is_admin' => 0,
+            'date_of_birth' => $validated_data['date_of_birth'],
+            'gender' => $validated_data['gender'],
+            'department_id' => $validated_data['department'],
+            'avatar' => $fileName,
+        ]);
+        event(new Registered($user));
+
+        return redirect()->back()->with('success', 'Employee created successfully');
     }
 
     public function update(UpdateUserRequest $request, $id) {

@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\helpers;
+use App\MyHelper;
 
 class TimesheetController extends Controller
 {
@@ -16,17 +18,14 @@ class TimesheetController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request->all());
         $query = Timesheet::query();
         $from = $request->input('from');
         $to = $request->input('to');
         $search = $request->input('search');
-        // dd(isset($from), isset($to));
         if (Gate::allows('admin')) {
             if (isset($search)) {
                 $query->search($request->input('search'));
             }
-            // dd($query);
             if (isset($from) && isset($to)) {
                 $query->fromTo($from, $to);
             } else if (isset($from) && !isset($to)) {
@@ -39,11 +38,13 @@ class TimesheetController extends Controller
                 'to' => $to,
                 'search' => $search
             ]);
-            // dd($timesheets);
             return view('timesheet.index', compact('timesheets'));
         }
+        $editMark = MyHelper::checkUserPermission('timesheet_update', Auth::user()->id) ? true : false;
+        $deleteMark = MyHelper::checkUserPermission('timesheet_delete', Auth::user()->id) ? true : false;
+        // dd($editMark, $deleteMark);
         $timesheets = $query->where('user_id', '=', Auth::user()->id)->paginate(15);
-        return view('timesheet.employee.index', compact('timesheets'));
+        return view('timesheet.employee.index', compact('timesheets', 'editMark', 'deleteMark'));
     }
 
     /**
@@ -125,7 +126,6 @@ class TimesheetController extends Controller
             'check_out.after' => 'Check out field must be after check in',
             'date.unique' => 'You have created this date or user already use this date',
         ]);
-        dd($validated);
         $check_in = Carbon::createFromTimeString($request->input('check_in'));
         $check_out = Carbon::createFromTimeString($request->input('check_out'));
         $date = $request->input('date');
@@ -159,9 +159,12 @@ class TimesheetController extends Controller
      */
     public function edit(string $id)
     {
-        $timesheet = Timesheet::find($id);
-        $user = $timesheet->user;
-        return view('timesheet.update', compact('timesheet', 'user'));
+        if (MyHelper::checkUserPermission('timesheet_update', Auth::user()->id)) {
+            $timesheet = Timesheet::find($id);
+            $user = $timesheet->user;
+            return view('timesheet.update', compact('timesheet', 'user'));
+        }
+        return redirect()->back()->with('error', 'You dont have permission to update your timesheet');
     }
 
     /**
