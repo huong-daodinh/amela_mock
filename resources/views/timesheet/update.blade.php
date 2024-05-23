@@ -10,7 +10,7 @@
             <div class="mb-5 text-lg">
                 Update timesheet of <span class="text-violet-500">{{$user->name}}</span>
             </div>
-            <form class="w-50 mx-auto" method="POST" action="{{route('timesheet.update', $timesheet->id)}}">
+            <form class="w-2/3 mx-auto" method="POST" action="{{route('timesheet.save', $timesheet->id)}}">
                 @csrf
                 <div class="mb-5">
                     <label for="time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select check_in time:</label>
@@ -59,9 +59,7 @@
                 </div>
                 <div >
                     <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Update</button>
-                    <a  href="{{route('timesheet.index')}}"
-                        class="bg-transparent hover:bg-blue-500 text-black font-semibold hover:text-white py-2 px-4 border border-black-500 hover:border-transparent rounded"
-                    >Back</a>
+                    <x-back-btn/>
                 </div>
             </form>
         </div>

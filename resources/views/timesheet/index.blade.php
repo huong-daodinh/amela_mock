@@ -1,5 +1,4 @@
 <x-app-layout>
-
     <x-slot name="header">
         <h2 class="font-semibold text-l text-gray-800 dark:text-gray-200 leading-tight">
             {{ 'Timesheets / Index' }}
@@ -7,12 +6,27 @@
     </x-slot>
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 bg-white">
         <div class="d-flex justify-between pt-4 pb-1">
-            <div class="flex justify-end item-center">
-                <a class="mx-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href="{{route('timesheet.create')}}">Create new timesheet</a>
-                <form action="" class="mb-5">
+            <div class="flex justify-between mb-5">
+                <form action="{{route('timesheet.index')}}" class="flex justify-between gap-5 items-end" method="POST">
                     @csrf
-                    <input type="text" name="search" id="" class="block text-sm text-gray-900 border border-gray-300 rounded bg-gray-50 focus:ring-blue-500 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search....">
+                    <div class="">
+                        <input type="text" name="search" id="" class="block text-sm text-gray-900 border border-gray-300 rounded bg-gray-50 focus:ring-blue-500 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search....">
+                    </div>
+                    <div>
+                        <label for="from">From</label>
+                        <input type="date" name="from" id="" class="block text-sm text-gray-900 border border-gray-300 rounded bg-gray-50 focus:ring-blue-500 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="from">To</label>
+                        <input type="date" name="to" id="" class="block text-sm text-gray-900 border border-gray-300 rounded bg-gray-50 focus:ring-blue-500 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+                    <div>
+                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Search</button>
+                    </div>
                 </form>
+                <div class="">
+                    <a class="mx-4 py-2.5 px-2 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" href="{{route('timesheet.create')}}">Create new timesheet</a>
+                </div>
             </div>
             <table class="min-w-full leading-normal">
                 <thead class="bg-slate-200">
@@ -27,9 +41,12 @@
                         Time
                     </th>
                     <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                          Status
+                        Duration
                     </th>
-                    <th class="px-5 py-3 border-b-2 border-gray-200">
+                    <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                        Status
+                    </th>
+                    <th class="px-5 py-3 border-b-2 border-gray-200 text-left">
                         Action
                     </th>
                 </tr>
@@ -48,6 +65,12 @@
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <span class="text-gray-600 whitespace-no-wrap">{{$item->check_in}}</span> /
                                 <span class="text-gray-600 whitespace-no-wrap">{{$item->check_out}}</span>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                @php
+                                    $checkOutTime = Carbon\Carbon::createFromTimeString($item->check_out);
+                                @endphp
+                                <span class="text-gray-600 whitespace-no-wrap">{{ gmdate('H:i', $checkOutTime->diffInSeconds($item->check_in)) }}</span>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">

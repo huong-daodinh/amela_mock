@@ -55,7 +55,7 @@ Route::middleware('auth', 'verified')->prefix('employee')->group(function() {
 // Route::post('/timesheet/{id}', [TimesheetController::class, 'update'])->middleware('auth', 'verified', 'timesheet.valid')->name('timesheet.save');
 
 Route::middleware('auth', 'verified', 'timesheet.valid')->prefix('/timesheet')->name('timesheet.')->group(function() {
-    Route::get('/', [TimesheetController::class, 'index'])->name('index');
+    Route::match(['get', 'post'], '/', [TimesheetController::class, 'index'])->name('index');
 
     Route::get('/create', [TimesheetController::class, 'create'])->name('create');
     Route::post('/create', [TimesheetController::class, 'store'])->name('store');
